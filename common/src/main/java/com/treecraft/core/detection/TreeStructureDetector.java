@@ -1,6 +1,8 @@
 package com.treecraft.core.detection;
 
 import com.treecraft.core.api.TreeComponentType;
+import com.treecraft.core.api.events.TreeCraftEvents;
+import com.treecraft.core.api.events.TreeStructureDetectedEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -35,6 +37,10 @@ public class TreeStructureDetector {
                 tree.addComponent(pos, blockState, type);
                 addConnectedBlocks(pos, type, toProcess, visited);
             }
+        }
+
+        if (tree.isReasonableSize()) {
+            TreeCraftEvents.post(new TreeStructureDetectedEvent(tree, level, startPos));
         }
 
         return tree;

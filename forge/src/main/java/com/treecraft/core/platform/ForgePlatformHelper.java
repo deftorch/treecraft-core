@@ -2,7 +2,10 @@ package com.treecraft.core.platform;
 
 import com.treecraft.core.platform.services.IPlatformHelper;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.loading.FMLLoader;
+
+import java.nio.file.Path;
 
 public class ForgePlatformHelper implements IPlatformHelper {
 
@@ -22,5 +25,10 @@ public class ForgePlatformHelper implements IPlatformHelper {
     public boolean isDevelopmentEnvironment() {
 
         return !FMLLoader.isProduction();
+    }
+
+    @Override
+    public Path getConfigDirectory() {
+        return FMLPaths.CONFIGDIR.get();
     }
 }

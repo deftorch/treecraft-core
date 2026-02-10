@@ -10,6 +10,8 @@ import com.treecraft.core.detection.heuristics.ConnectionHeuristic;
 import com.treecraft.core.detection.heuristics.MaterialHeuristic;
 import com.treecraft.core.detection.heuristics.NameHeuristic;
 import com.treecraft.core.detection.heuristics.TagHeuristic;
+import com.treecraft.core.api.events.TreeDetectedEvent;
+import com.treecraft.core.api.events.TreeCraftEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -74,6 +76,8 @@ public class TreeBlockDetector implements ITreeBlockDetector {
 
         if (level == null) {
             cache.put(block, result);
+        } else if (pos != null && result.type != TreeComponentType.UNKNOWN) {
+            TreeCraftEvents.post(new TreeDetectedEvent(block, pos, result.type, result.confidence));
         }
 
         return result.type;

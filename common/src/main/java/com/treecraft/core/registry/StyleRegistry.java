@@ -2,6 +2,8 @@ package com.treecraft.core.registry;
 
 import com.treecraft.core.Constants;
 import com.treecraft.core.api.BlockStyle;
+import com.treecraft.core.api.events.StyleRegisteredEvent;
+import com.treecraft.core.api.events.TreeCraftEvents;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
@@ -13,14 +15,14 @@ import java.util.stream.Collectors;
 public class StyleRegistry {
     private static final Map<ResourceLocation, BlockStyle> STYLES = new ConcurrentHashMap<>();
     private static final Map<String, Set<ResourceLocation>> STYLES_BY_MOD = new ConcurrentHashMap<>();
-    private static final List<Consumer<BlockStyle>> LISTENERS = Collections.synchronizedList(new ArrayList<>());
 
     public static void initialize() {
         Constants.LOG.info("Initializing Style Registry...");
     }
 
     public static void registerListener(Consumer<BlockStyle> listener) {
-        LISTENERS.add(listener);
+        // Adapt old listener to new event system
+        TreeCraftEvents.onStyleRegistered(event -> listener.accept(event.getStyle()));
     }
 
     public static void register(BlockStyle style) {
@@ -35,15 +37,7 @@ public class StyleRegistry {
         String modId = id.getNamespace();
         STYLES_BY_MOD.computeIfAbsent(modId, k -> new HashSet<>()).add(id);
 
-        synchronized (LISTENERS) {
-            for (Consumer<BlockStyle> listener : LISTENERS) {
-                try {
-                    listener.accept(style);
-                } catch (Exception e) {
-                    Constants.LOG.error("Error in style registration listener", e);
-                }
-            }
-        }
+        TreeCraftEvents.post(new StyleRegisteredEvent(style));
 
         Constants.LOG.debug("Registered style: {}", id);
     }

@@ -1,5 +1,7 @@
 package com.treecraft.core.platform.services;
 
+import java.nio.file.Path;
+
 public interface IPlatformHelper {
 
     /**
@@ -23,6 +25,13 @@ public interface IPlatformHelper {
      * @return True if in a development environment, false otherwise.
      */
     boolean isDevelopmentEnvironment();
+
+    /**
+     * Gets the config directory path.
+     *
+     * @return The path to the config directory.
+     */
+    Path getConfigDirectory();
 
     /**
      * Gets the name of the environment type as a string.
