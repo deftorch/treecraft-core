@@ -22,7 +22,7 @@ public class NameHeuristic implements IDetectionHeuristic {
 
     @Override
     public HeuristicResult evaluate(BlockState block, @Nullable BlockGetter level, @Nullable BlockPos pos) {
-        String id = BuiltInRegistries.BLOCK.getKey(block.getBlock()).toString().toLowerCase();
+        String id = getBlockKey(block.getBlock()).toString().toLowerCase();
 
         for (Map.Entry<Pattern, TreeComponentType> entry : PATTERNS.entrySet()) {
             if (entry.getKey().matcher(id).matches()) {
@@ -31,5 +31,9 @@ public class NameHeuristic implements IDetectionHeuristic {
         }
 
         return new HeuristicResult(TreeComponentType.UNKNOWN, 0.0f);
+    }
+
+    protected net.minecraft.resources.ResourceLocation getBlockKey(net.minecraft.world.level.block.Block block) {
+        return BuiltInRegistries.BLOCK.getKey(block);
     }
 }

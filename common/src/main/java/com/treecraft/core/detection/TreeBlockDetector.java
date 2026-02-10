@@ -119,4 +119,9 @@ public class TreeBlockDetector implements ITreeBlockDetector {
             this.confidence = confidence;
         }
     }
+
+    public void resetForTest() {
+        heuristics.clear();
+        cache.invalidateAll();
+    }
 }
