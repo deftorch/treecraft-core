@@ -26,7 +26,7 @@ public class TreeBlockDetector implements ITreeBlockDetector {
     private static final Logger LOGGER = LoggerFactory.getLogger("TreeBlockDetector");
     private static final TreeBlockDetector INSTANCE = new TreeBlockDetector();
     private final List<IDetectionHeuristic> heuristics = new ArrayList<>();
-    private final Cache<BlockState, DetectionResult> cache;
+    private Cache<BlockState, DetectionResult> cache;
 
     private TreeBlockDetector() {
         // Register default heuristics
@@ -124,6 +124,19 @@ public class TreeBlockDetector implements ITreeBlockDetector {
 
     public void resetForTest() {
         heuristics.clear();
-        cache.invalidateAll();
+        // Reset cache to default configuration
+        this.cache = CacheBuilder.newBuilder()
+            .maximumSize(com.treecraft.core.config.CoreConfig.detectionCacheSize)
+            .expireAfterAccess(10, TimeUnit.MINUTES)
+            .build();
+    }
+
+    // Visible for testing
+    public void setCacheTickerForTest(com.google.common.base.Ticker ticker) {
+        this.cache = CacheBuilder.newBuilder()
+            .maximumSize(com.treecraft.core.config.CoreConfig.detectionCacheSize)
+            .expireAfterAccess(10, TimeUnit.MINUTES)
+            .ticker(ticker)
+            .build();
     }
 }
