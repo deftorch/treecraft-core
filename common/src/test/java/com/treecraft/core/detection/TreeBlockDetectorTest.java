@@ -117,12 +117,76 @@ class TreeBlockDetectorTest {
         verify(heuristic, times(1)).evaluate(any(), any(), any());
     }
 
-    /*
+    @Test
+    void testDetectionSpeed_ShouldComplete_Under10ms() {
+        // Measure time to detect single block
+        long startTime = System.nanoTime();
+
+        for (int i = 0; i < 1000; i++) {
+            detector.detectBlockType(mockBlockState.get());
+        }
+
+        long endTime = System.nanoTime();
+        long avgTime = (endTime - startTime) / 1000;
+
+        assertTrue(avgTime < 10_000_000,
+            "Detection should complete under 10ms, but took: " + avgTime + "ns");
+    }
+
+    @Test
+    void testCacheHitRate_ShouldExceed90Percent() {
+        IDetectionHeuristic heuristic = mock(IDetectionHeuristic.class);
+        when(heuristic.evaluate(any(), any(), any())).thenReturn(new HeuristicResult(TreeComponentType.TRUNK, 0.9f));
+        detector.registerHeuristic(heuristic);
+
+        // Warm up cache
+        for (int i = 0; i < 100; i++) {
+            detector.detectBlockType(mockBlockState.get());
+        }
+
+        // Measure cache hits
+        int totalCalls = 1000;
+
+        for (int i = 0; i < totalCalls; i++) {
+            detector.detectBlockType(mockBlockState.get());
+        }
+
+        // Should only be called once (during warm up) because it's cached
+        verify(heuristic, times(1)).evaluate(any(), any(), any());
+    }
+
     @Test
     void testCacheExpiration_ShouldRecompute() {
-        // Hard to test without controlling ticker/clock.
+        class TestTicker extends com.google.common.base.Ticker {
+            long time = 0;
+            @Override
+            public long read() { return time; }
+            void advance(long amount, java.util.concurrent.TimeUnit unit) {
+                time += unit.toNanos(amount);
+            }
+        }
+        TestTicker ticker = new TestTicker();
+        detector.setCacheTickerForTest(ticker);
+
+        IDetectionHeuristic heuristic = mock(IDetectionHeuristic.class);
+        when(heuristic.evaluate(any(), any(), any())).thenReturn(new HeuristicResult(TreeComponentType.TRUNK, 0.9f));
+        detector.registerHeuristic(heuristic);
+
+        // First call - should calculate
+        detector.detectBlockType(mockBlockState.get());
+        verify(heuristic, times(1)).evaluate(any(), any(), any());
+
+        // Second call - should use cache
+        detector.detectBlockType(mockBlockState.get());
+        verify(heuristic, times(1)).evaluate(any(), any(), any());
+
+        // Advance time by 11 minutes (expireAfterAccess is 10 min)
+        ticker.advance(11, java.util.concurrent.TimeUnit.MINUTES);
+
+        // Third call - should recompute
+        detector.detectBlockType(mockBlockState.get());
+        verify(heuristic, times(2)).evaluate(any(), any(), any());
     }
-    */
 
     @Test
     void testRegistryOverride_ShouldUseRegistry() {

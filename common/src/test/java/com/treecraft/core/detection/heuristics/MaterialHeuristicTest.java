@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,8 +56,8 @@ class MaterialHeuristicTest {
         assertEquals(0.4f, result.getConfidence());
     }
 
-    /*
     @Test
+    @Disabled("Hardness for logs and planks is often identical (2.0), making this heuristic insufficient on its own.")
     void testHardness_ShouldDistinguishTrunkFromPlanks() {
         // This test requires MaterialHeuristic to check hardness, which it currently doesn't.
         // Planks and Logs both have SoundType.WOOD.
@@ -68,5 +69,4 @@ class MaterialHeuristicTest {
         // So hardness might not be enough.
         // But let's assume the requirement implies checking something.
     }
-    */
 }
