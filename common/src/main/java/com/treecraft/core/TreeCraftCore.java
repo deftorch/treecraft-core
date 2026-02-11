@@ -1,6 +1,7 @@
 package com.treecraft.core;
 
 import com.treecraft.core.compatibility.ModCompatibility;
+import com.treecraft.core.config.ConfigLoader;
 import com.treecraft.core.detection.TreeBlockDetector;
 import com.treecraft.core.registry.StyleLoader;
 import com.treecraft.core.registry.StyleRegistry;
@@ -11,6 +12,7 @@ public class TreeCraftCore {
     public static void init() {
         Constants.LOG.info("Initializing TreeCraft Core...");
 
+        ConfigLoader.load();
         TreeBlockDetector.initialize();
         StyleRegistry.initialize();
         TreeBlockRegistry.initialize();

@@ -33,7 +33,7 @@ public class ConnectionHeuristic implements IDetectionHeuristic {
             }
         }
 
-        if (verticalConnections > 0 && horizontalConnections == 0) {
+        if (verticalConnections > horizontalConnections) {
             return new HeuristicResult(TreeComponentType.TRUNK, 0.6f);
         }
 
