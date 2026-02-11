@@ -29,4 +29,9 @@ public class MockBlockState {
         when(state.getSoundType()).thenReturn(sound);
         return this;
     }
+
+    public MockBlockState withProperty(net.minecraft.world.level.block.state.properties.Property<?> property) {
+        when(state.hasProperty(property)).thenReturn(true);
+        return this;
+    }
 }

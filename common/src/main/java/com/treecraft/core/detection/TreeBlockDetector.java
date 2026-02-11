@@ -9,6 +9,7 @@ import com.treecraft.core.api.TreeComponentType;
 import com.treecraft.core.detection.heuristics.ConnectionHeuristic;
 import com.treecraft.core.detection.heuristics.MaterialHeuristic;
 import com.treecraft.core.detection.heuristics.NameHeuristic;
+import com.treecraft.core.detection.heuristics.PropertiesHeuristic;
 import com.treecraft.core.detection.heuristics.TagHeuristic;
 import com.treecraft.core.api.events.TreeDetectedEvent;
 import com.treecraft.core.api.events.TreeCraftEvents;
@@ -32,6 +33,7 @@ public class TreeBlockDetector implements ITreeBlockDetector {
         registerHeuristic(new TagHeuristic());
         registerHeuristic(new MaterialHeuristic());
         registerHeuristic(new NameHeuristic());
+        registerHeuristic(new PropertiesHeuristic());
         registerHeuristic(new ConnectionHeuristic());
 
         cache = CacheBuilder.newBuilder()
