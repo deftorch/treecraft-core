@@ -3,10 +3,14 @@ TreeCraft Core is a lightweight foundation library that automatically detects an
 
 ## Building from Source
 
-To build the project, run:
+To build the project for both **Fabric** and **Forge**, run:
 ```bash
 ./gradlew build
 ```
 
-This will build all modules (`common`, `fabric`, `forge`).
+This will build all modules. The resulting JAR files will be located in:
+
+- **Fabric:** `fabric/build/libs/`
+- **Forge:** `forge/build/libs/`
+
 Ensure you have Java 17 or higher installed.
